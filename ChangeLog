@@ -1,7 +1,9 @@
-2005-08-31  Carl Worth  <cworth@cworth.org>
+2005-08-31  Owen Taylor  <otaylor@redhat.com>
 
-	* configure.in: Increment CAIRO_VERSION to 1.1.1 after making
-	branch tag BRANCH_1_0.
+	* src/cairo-xlib-surface.c (_get_image_surface) 
+	(_draw_image_surface): Handle displays which don't match
+	the local endianness by byteswapping on GetImage/PutImage.
+	(#4321, reported by Sjoerd Simons)
 
 2005-08-31  Carl Worth  <cworth@cworth.org>
 
