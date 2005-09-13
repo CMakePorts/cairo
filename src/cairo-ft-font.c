@@ -1648,29 +1648,27 @@ _cairo_ft_scaled_font_text_to_glyphs (void	     *abstract_font,
     cairo_cache_t *cache = NULL;
     cairo_status_t status = CAIRO_STATUS_SUCCESS;
 
+    _cairo_lock_global_image_glyph_cache ();
+    cache = _cairo_get_global_image_glyph_cache ();
+    if (cache == NULL)
+	return CAIRO_STATUS_NO_MEMORY;
+
     _cairo_ft_scaled_font_get_glyph_cache_key (scaled_font, &key);
 
     status = _cairo_utf8_to_ucs4 ((unsigned char*)utf8, -1, &ucs4, num_glyphs);
     if (status)
-	return status;
+	goto CLEANUP_CACHE;
 
     face = cairo_ft_scaled_font_lock_face (&scaled_font->base);
     if (!face) {
 	status = CAIRO_STATUS_NO_MEMORY;
-	goto FAIL1;
-    }
-
-    _cairo_lock_global_image_glyph_cache ();
-    cache = _cairo_get_global_image_glyph_cache ();
-    if (cache == NULL) {
-	status = CAIRO_STATUS_NO_MEMORY;
-	goto FAIL2;
+	goto CLEANUP_UCS4;
     }
 
     *glyphs = (cairo_glyph_t *) malloc ((*num_glyphs) * (sizeof (cairo_glyph_t)));
     if (*glyphs == NULL) {
 	status = CAIRO_STATUS_NO_MEMORY;
-	goto FAIL2;
+	goto CLEANUP_SCALED_FONT_LOCK_FACE;
     }
 
     for (i = 0; i < *num_glyphs; i++)
@@ -1690,15 +1688,16 @@ _cairo_ft_scaled_font_text_to_glyphs (void	     *abstract_font,
         y += val->extents.y_advance;
     }
 
- FAIL2:
+ CLEANUP_SCALED_FONT_LOCK_FACE:
+    cairo_ft_scaled_font_unlock_face (&scaled_font->base);
+    
+ CLEANUP_UCS4:
+    free (ucs4);
+
+ CLEANUP_CACHE:
     if (cache)
 	_cairo_unlock_global_image_glyph_cache ();
 
-    cairo_ft_scaled_font_unlock_face (&scaled_font->base);
-    
- FAIL1:
-    free (ucs4);
-    
     return status;
 }
 
