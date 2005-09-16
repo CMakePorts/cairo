@@ -1,3 +1,14 @@
+2005-09-16  Carl Worth  <cworth@cworth.org>
+
+        Tested by: John Ellson
+        Closes bug #4408
+        https://bugs.freedesktop.org/show_bug.cgi?id=4408
+
+        * src/cairo-path-stroke.c: (_cairo_stroker_curve_to_dashed),
+        (_cairo_path_fixed_stroke_to_traps): Add support for dashed
+        splines. (The antialiasing quality isn't perfect, but at least the
+        curves are dashed now).
+
 2005-09-13  Carl Worth  <cworth@cworth.org>
 
 	* src/cairo-ft-font.c: (_cairo_ft_scaled_font_text_to_glyphs):
