@@ -324,7 +324,7 @@ _win32_scaled_font_get_scaled_hfont (cairo_win32_scaled_font_t *scaled_font)
 {
     if (!scaled_font->scaled_hfont) {
 	LOGFONTW logfont = scaled_font->logfont;
-	logfont.lfHeight = scaled_font->logical_size;
+	logfont.lfHeight = -scaled_font->logical_size;
 	logfont.lfWidth = 0;
 	logfont.lfEscapement = 0;
 	logfont.lfOrientation = 0;
@@ -379,7 +379,7 @@ _win32_scaled_font_get_unscaled_hfont (cairo_win32_scaled_font_t *scaled_font,
 	free (otm);
 	
 	logfont = scaled_font->logfont;
-	logfont.lfHeight = scaled_font->em_square;
+	logfont.lfHeight = -scaled_font->em_square;
 	logfont.lfWidth = 0;
 	logfont.lfEscapement = 0;
 	logfont.lfOrientation = 0;

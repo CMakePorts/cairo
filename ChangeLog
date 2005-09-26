@@ -1,3 +1,11 @@
+2005-09-26  Tor Lillqvist  <tml@novell.com>
+
+	* src/cairo-win32-font.c (_win32_scaled_font_get_scaled_hfont),
+	(_win32_scaled_font_get_unscaled_hfont): Set LOGFONT::lfHeight
+	negative. A negative lfHeight means "em height" which is what we
+	want, and matches how other toolkits interpret font sizes on
+	Win32. (Positive lfHeight means "cell height".) (#4593)
+
 2005-09-20  T Rowley  <tim.rowley@gmail.com>
 
         * src/cairo-atsui-font.c (_cairo_atsui_font_show_glyphs):
