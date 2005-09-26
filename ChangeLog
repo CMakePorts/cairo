@@ -5,6 +5,10 @@
 	negative. A negative lfHeight means "em height" which is what we
 	want, and matches how other toolkits interpret font sizes on
 	Win32. (Positive lfHeight means "cell height".) (#4593)
+	(_cairo_win32_scaled_font_init_glyph_metrics): If
+	GetGlyphOutlineW() fails, set metrics to zero. (#3927, Hans
+	Breuer) (Don't print error message, as this might occur frequently
+	with a misconfigured Pango 1.10.0.)
 
 2005-09-20  T Rowley  <tim.rowley@gmail.com>
 

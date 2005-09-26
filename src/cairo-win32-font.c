@@ -723,8 +723,10 @@ _cairo_win32_scaled_font_glyph_extents (void		     *abstract_font,
 	status = cairo_win32_scaled_font_select_font (&scaled_font->base, hdc);
 	if (status)
 	    return status;
-	GetGlyphOutlineW (hdc, glyphs[0].index, GGO_METRICS | GGO_GLYPH_INDEX,
-			  &metrics, 0, NULL, &matrix);
+	if (GetGlyphOutlineW (hdc, glyphs[0].index, GGO_METRICS | GGO_GLYPH_INDEX,
+			      &metrics, 0, NULL, &matrix) == GDI_ERROR) {
+	  memset (&metrics, 0, sizeof (GLYPHMETRICS));
+	}
 	cairo_win32_scaled_font_done_font (&scaled_font->base);
 
 	if (scaled_font->swap_axes) {
@@ -758,8 +760,10 @@ _cairo_win32_scaled_font_glyph_extents (void		     *abstract_font,
 	 * of the font.
 	 */
 	status = _cairo_win32_scaled_font_select_unscaled_font (&scaled_font->base, hdc);
-	GetGlyphOutlineW (hdc, glyphs[0].index, GGO_METRICS | GGO_GLYPH_INDEX,
-			  &metrics, 0, NULL, &matrix);
+	if (GetGlyphOutlineW (hdc, glyphs[0].index, GGO_METRICS | GGO_GLYPH_INDEX,
+			      &metrics, 0, NULL, &matrix) == GDI_ERROR) {
+	  memset (&metrics, 0, sizeof (GLYPHMETRICS));
+	}
 	_cairo_win32_scaled_font_done_unscaled_font (&scaled_font->base);
 
 	extents->x_bearing = (double)metrics.gmptGlyphOrigin.x / scaled_font->em_square;
