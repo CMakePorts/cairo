@@ -1,3 +1,10 @@
+2005-09-28  T Rowley  <tim.rowley@gmail.com>
+
+	Bug #4612, reviewed by cworth.
+	
+	* src/cairo-win32-font.c (_cairo_win32_scaled_font_glyph_bbox):
+	Add cast so that sign conversion doesn't alter comparison.
+
 2005-09-27  T Rowley  <tim.rowley@gmail.com>
 
 	Bug #4602, reviewed by cworth.
