@@ -1,8 +1,13 @@
 2005-10-03  Carl Worth  <cworth@cworth.org>
 
+	* configure.in: Increment CAIRO_VERSION to 1.0.3 after tagging
+	RELEASE_1_0_2.
+
+2005-10-03  Carl Worth  <cworth@cworth.org>
+
 	* configure.in: Increment CAIRO_VERSION to 1.0.2 and libtool
 	versioning to 4:3:2.
-	
+
 	* NEWS: Add notes for the 1.0.2 release.
 
 2005-09-30  Bertram Felgenhauer  <int-e@gmx.de>
