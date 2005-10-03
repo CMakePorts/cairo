@@ -1062,6 +1062,7 @@ static const cairo_surface_backend_t cairo_win32_surface_backend = {
 CRITICAL_SECTION cairo_toy_font_face_hash_table_mutex;
 CRITICAL_SECTION cairo_scaled_font_map_mutex;
 CRITICAL_SECTION cairo_ft_unscaled_font_map_mutex;
+CRITICAL_SECTION _global_image_glyph_cache_mutex;
 
 BOOL WINAPI
 DllMain (HINSTANCE hinstDLL,
@@ -1075,11 +1076,13 @@ DllMain (HINSTANCE hinstDLL,
     InitializeCriticalSection (&cairo_toy_font_face_hash_table_mutex);
     InitializeCriticalSection (&cairo_scaled_font_map_mutex);
     InitializeCriticalSection (&cairo_ft_unscaled_font_map_mutex);
+    InitializeCriticalSection (&_global_image_glyph_cache_mutex);
     break;
   case DLL_PROCESS_DETACH:
     DeleteCriticalSection (&cairo_toy_font_face_hash_table_mutex);
     DeleteCriticalSection (&cairo_scaled_font_map_mutex);
     DeleteCriticalSection (&cairo_ft_unscaled_font_map_mutex);
+    DeleteCriticalSection (&_global_image_glyph_cache_mutex);
     break;
   }
   return TRUE;

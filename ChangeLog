@@ -1,5 +1,11 @@
 2005-10-03  Carl Worth  <cworth@cworth.org>
 
+	* src/cairo-win32-surface.c: (DllMain): Add missing initialization
+	for _global_image_glyph_cache_mutex (Vladimir Vukicevic
+	<vladimirv@gmail.com>).
+
+2005-10-03  Carl Worth  <cworth@cworth.org>
+
 	* configure.in: Increment CAIRO_VERSION to 1.0.3 after tagging
 	RELEASE_1_0_2.
 
