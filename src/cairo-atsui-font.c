@@ -659,13 +659,11 @@ _cairo_atsui_font_glyph_path(void *abstract_font,
     for (i = 0; i < num_glyphs; i++) {
         GlyphID theGlyph = glyphs[i].index;
 
+	info.scale = font->scale;
+	info.scale.x0 = glyphs[i].x;
+	info.scale.y0 = glyphs[i].y;
 
-        cairo_matrix_init(&info.scale,
-			  1.0, 0.0,
-			  0.0, 1.0, glyphs[i].x, glyphs[i].y);
-
-
-        err = ATSUGlyphGetCubicPaths(font->style,
+        err = ATSUGlyphGetCubicPaths(font->unscaled_style,
                                      theGlyph,
                                      moveProc,
                                      lineProc,

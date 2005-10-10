@@ -1,3 +1,8 @@
+2005-10-10  T Rowley  <tim.rowley@gmail.com>
+
+        * src/cairo-atsui-font.c (_cairo_atsui_font_glyph_path):
+	Apply proper transform to generated paths.
+
 2005-10-08  Carl Worth  <cworth@cworth.org>
 
         * configure.in: Fix typo leading to truncated error message
