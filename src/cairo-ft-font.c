@@ -65,6 +65,7 @@
  */
 #define PRIVATE_FLAG_HINT_METRICS (0x01 << 24)
 #define PRIVATE_FLAG_EMBOLDEN     (0x02 << 24)
+#define PRIVATE_FLAG_BGR          (0x04 << 24)
 #define PRIVATE_FLAGS_MASK        (0xff << 24)
 
  /* This is the max number of FT_face objects we keep open at once
@@ -973,11 +974,20 @@ _render_glyph_outline (FT_Face                          face,
 	    /* XXX not a complete set of flags. This code
 	     * will go away when cworth rewrites the glyph
 	     * cache code */
-	    if (FT_LOAD_TARGET_MODE (val->key.flags) == FT_RENDER_MODE_LCD)
-		rgba = FC_RGBA_RGB;
-	    else if (FT_LOAD_TARGET_MODE (val->key.flags) == FT_RENDER_MODE_LCD_V)
-		rgba = FC_RGBA_VBGR;
-	
+	    if (FT_LOAD_TARGET_MODE (val->key.flags) == FT_RENDER_MODE_LCD) {
+		    if (val->key.flags & PRIVATE_FLAG_BGR) {
+		        rgba = FC_RGBA_BGR;
+		    } else {
+			rgba = FC_RGBA_RGB;
+		    }
+	    }
+	    else if (FT_LOAD_TARGET_MODE (val->key.flags) == FT_RENDER_MODE_LCD_V) {
+		       if (val->key.flags & PRIVATE_FLAG_BGR) {
+			rgba = FC_RGBA_VBGR;
+		    } else {
+			rgba = FC_RGBA_VRGB;
+		    }
+	    }
 	    switch (rgba) {
 	    case FC_RGBA_RGB:
 	    case FC_RGBA_BGR:
@@ -1387,13 +1397,15 @@ _get_pattern_load_flags (FcPattern *pattern)
     case FC_RGBA_NONE:
     default:
 	break;
-    case FC_RGBA_RGB:
     case FC_RGBA_BGR:
-	target_flags = FT_LOAD_TARGET_LCD;
+	target_flags |= PRIVATE_FLAG_BGR;
+    case FC_RGBA_RGB:
+	target_flags |= FT_LOAD_TARGET_LCD;
 	break;
-    case FC_RGBA_VRGB:
     case FC_RGBA_VBGR:
-	target_flags = FT_LOAD_TARGET_LCD_V;
+	target_flags |= PRIVATE_FLAG_BGR;
+    case FC_RGBA_VRGB:
+	target_flags |= FT_LOAD_TARGET_LCD_V;
 	break;
     }
 
@@ -1445,13 +1457,15 @@ _get_options_load_flags (const cairo_font_options_t *options)
 	break;
     case CAIRO_ANTIALIAS_SUBPIXEL:
 	switch (options->subpixel_order) {
+	case CAIRO_SUBPIXEL_ORDER_BGR:
+	    load_flags |= PRIVATE_FLAG_BGR;
 	case CAIRO_SUBPIXEL_ORDER_DEFAULT:
 	case CAIRO_SUBPIXEL_ORDER_RGB:
-	case CAIRO_SUBPIXEL_ORDER_BGR:
 	    load_flags |= FT_LOAD_TARGET_LCD;
 	    break;
-	case CAIRO_SUBPIXEL_ORDER_VRGB:
 	case CAIRO_SUBPIXEL_ORDER_VBGR:
+	    load_flags |= PRIVATE_FLAG_BGR;
+	case CAIRO_SUBPIXEL_ORDER_VRGB:
 	    load_flags |= FT_LOAD_TARGET_LCD_V;
 	    break;
 	}
