@@ -41,6 +41,7 @@
 #include "cairo-xlib-test.h"
 #include "cairo-xlib-private.h"
 #include <X11/extensions/Xrender.h>
+#include <X11/extensions/renderproto.h>
 
 /* Xlib doesn't define a typedef, so define one ourselves */
 typedef int (*cairo_xlib_error_func_t) (Display     *display,
@@ -2710,7 +2711,9 @@ _cairo_xlib_surface_show_glyphs (cairo_scaled_font_t    *scaled_font,
     cairo_xlib_surface_t *src;
     glyphset_cache_t *cache;
     cairo_glyph_cache_key_t key;
-    glyphset_cache_entry_t **entries;
+    const cairo_glyph_t *glyphs_chunk;
+    glyphset_cache_entry_t **entries, **entries_chunk;
+    int glyphs_remaining, chunk_size, max_chunk_size;
     glyphset_cache_entry_t *stack_entries [N_STACK_BUF];
     composite_operation_t operation;
     int i;
@@ -2777,26 +2780,46 @@ _cairo_xlib_surface_show_glyphs (cairo_scaled_font_t    *scaled_font,
     /* Call the appropriate sub-function. */
 
     _cairo_xlib_surface_ensure_dst_picture (self);
+
+    max_chunk_size = XMaxRequestSize (self->dpy);
     if (elt_size == 8)
+	max_chunk_size -= sz_xRenderCompositeGlyphs8Req;
+    if (elt_size == 16)
+	max_chunk_size -= sz_xRenderCompositeGlyphs16Req;
+    if (elt_size == 32)
+	max_chunk_size -= sz_xRenderCompositeGlyphs32Req;
+    max_chunk_size /= sz_xGlyphElt;
+
+    for (glyphs_remaining = num_glyphs, glyphs_chunk = glyphs, entries_chunk = entries;
+	 glyphs_remaining;
+	 glyphs_remaining -= chunk_size, glyphs_chunk += chunk_size, entries_chunk += chunk_size)
     {
-	status = _cairo_xlib_surface_show_glyphs8 (scaled_font, operator, cache, &key, src, self,
-						   source_x + attributes.x_offset - dest_x,
-						   source_y + attributes.y_offset - dest_y, 
-						   glyphs, entries, num_glyphs);
-    }
-    else if (elt_size == 16)
-    {
-	status = _cairo_xlib_surface_show_glyphs16 (scaled_font, operator, cache, &key, src, self,
-						    source_x + attributes.x_offset - dest_x,
-						    source_y + attributes.y_offset - dest_y, 
-						    glyphs, entries, num_glyphs);
-    }
-    else 
-    {
-	status = _cairo_xlib_surface_show_glyphs32 (scaled_font, operator, cache, &key, src, self,
-						    source_x + attributes.x_offset - dest_x,
-						    source_y + attributes.y_offset - dest_y, 
-						    glyphs, entries, num_glyphs);
+	chunk_size = MIN (glyphs_remaining, max_chunk_size);
+
+	if (elt_size == 8)
+	{
+	    status = _cairo_xlib_surface_show_glyphs8 (scaled_font, operator, cache, &key, src, self,
+						       source_x + attributes.x_offset - dest_x,
+						       source_y + attributes.y_offset - dest_y, 
+						       glyphs_chunk, entries_chunk, chunk_size);
+	}
+	else if (elt_size == 16)
+	{
+	    status = _cairo_xlib_surface_show_glyphs16 (scaled_font, operator, cache, &key, src, self,
+							source_x + attributes.x_offset - dest_x,
+							source_y + attributes.y_offset - dest_y, 
+							glyphs_chunk, entries_chunk, chunk_size);
+	}
+	else 
+	{
+	    status = _cairo_xlib_surface_show_glyphs32 (scaled_font, operator, cache, &key, src, self,
+							source_x + attributes.x_offset - dest_x,
+							source_y + attributes.y_offset - dest_y, 
+							glyphs_chunk, entries_chunk, chunk_size);
+	}
+
+	if (status != CAIRO_STATUS_SUCCESS)
+	    break;
     }
 
     if (status == CAIRO_STATUS_SUCCESS &&
