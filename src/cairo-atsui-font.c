@@ -80,7 +80,7 @@ CreateSizedCopyOfStyle(ATSUStyle inStyle, cairo_matrix_t *scale)
     OSStatus err;
 
 
-    // Set the style's size
+    /* Set the style's size */
     CGAffineTransform theTransform =
         CGAffineTransformMakeWithCairoFontScale(scale);
     Fixed theSize =
@@ -148,7 +148,7 @@ _cairo_atsui_font_create_toy(cairo_toy_font_face_t *toy_face,
                                kFontNoLanguageCode, &fontID);
 
     if (err != noErr) {
-	// couldn't get the font - remap css names and try again
+	/* couldn't get the font - remap css names and try again */
 
 	if (!strcmp(family, "serif"))
 	    family = "Times";
@@ -160,7 +160,7 @@ _cairo_atsui_font_create_toy(cairo_toy_font_face_t *toy_face,
 	    family = "Gadget";
 	else if (!strcmp(family, "monospace"))
 	    family = "Courier";
-	else // anything else - return error instead?
+	else /* anything else - return error instead? */
 	    family = "Courier";
 
 	err = ATSUFindFontFromName(family, strlen(family),
@@ -247,7 +247,7 @@ _cairo_atsui_font_text_to_glyphs(void		*abstract_font,
     UniChar *theText;
     cairo_status_t status;
 
-    // liberal estimate of size
+    /* liberal estimate of size */
     charCount = strlen(utf8);
 
     if (charCount == 0) {
@@ -266,11 +266,11 @@ _cairo_atsui_font_text_to_glyphs(void		*abstract_font,
                                      theText, 0, charCount, charCount);
 
 
-    // Set the style for all of the text
+    /* Set the style for all of the text */
     err = ATSUSetRunStyle(textLayout,
                           font->unscaled_style, kATSUFromTextBeginning, kATSUToTextEnd);
 
-    // Get the glyphs from the text layout object
+    /* Get the glyphs from the text layout object */
     err = ATSUDirectGetLayoutDataArrayPtrFromTextLayout(textLayout,
                                                         0,
                                                         kATSUDirectDataLayoutRecordATSLayoutRecordCurrent,
@@ -315,7 +315,7 @@ _cairo_atsui_font_font_extents(void *abstract_font,
     ATSFontMetrics metrics;
     OSStatus err;
 
-    // TODO - test this
+    /* TODO - test this */
 
     atsFont = FMGetATSFontRefFromFont(font->fontID);
 
@@ -330,7 +330,9 @@ _cairo_atsui_font_font_extents(void *abstract_font,
             extents->height = metrics.capHeight;
             extents->max_x_advance = metrics.maxAdvanceWidth;
 
-            // The FT backend doesn't handle max_y_advance either, so we'll ignore it for now. 
+            /* The FT backend doesn't handle max_y_advance either, so we'll
+             * ignore it for now.
+             */
             extents->max_y_advance = 0.0;
 
             return CAIRO_STATUS_SUCCESS;
@@ -458,7 +460,7 @@ _cairo_atsui_font_show_glyphs(void *abstract_font,
 				      &rect,
 				      &extra);
 
-    // Create a CGBitmapContext for the dest surface for drawing into
+    /* Create a CGBitmapContext for the dest surface for drawing into */
     colorSpace = CGColorSpaceCreateDeviceRGB();
 
     myBitmapContext = CGBitmapContextCreate(destImageSurface->data,
@@ -496,11 +498,12 @@ _cairo_atsui_font_show_glyphs(void *abstract_font,
 	CGContextSetRGBFillColor(myBitmapContext, 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    // TODO - bold and italic text
-    //
-    // We could draw the text using ATSUI and get bold, italics
-    // etc. for free, but ATSUI does a lot of text layout work
-    // that we don't really need...
+    /* TODO - bold and italic text
+     *
+     * We could draw the text using ATSUI and get bold, italics
+     * etc. for free, but ATSUI does a lot of text layout work
+     * that we don't really need...
+     */
 
 
     for (i = 0; i < num_glyphs; i++) {
