@@ -720,12 +720,7 @@ _get_bitmap_surface (cairo_image_glyph_cache_entry_t *val,
     width = bitmap->width;
     height = bitmap->rows;
     
-    if (width * height == 0) {
-	if (own_buffer && bitmap->buffer)
-	    free (bitmap->buffer);
-	
-	val->image = NULL;
-    } else {
+    {
 	switch (bitmap->pixel_mode) {
 	case FT_PIXEL_MODE_MONO:
 	    stride = (((width + 31) & ~31) >> 3);
@@ -1080,7 +1075,9 @@ _render_glyph_bitmap (FT_Face                          face,
     if (error)
 	return CAIRO_STATUS_NO_MEMORY;
 
-    _get_bitmap_surface (val, &glyphslot->bitmap, FALSE, FC_RGBA_NONE);
+    status = _get_bitmap_surface (val, &glyphslot->bitmap, FALSE, FC_RGBA_NONE);
+    if (status)
+	return status;
 
     val->size.x = glyphslot->bitmap_left;
     val->size.y = - glyphslot->bitmap_top;
