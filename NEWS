@@ -1,3 +1,14 @@
+Release 1.0.4 (2006-03-15 Behdad Esfahbod <behdad@behdad.org>)
+==============================================================
+This is a bug fix release.  Many fixes in this release are
+backported from the head branch and do not have bug numbers.
+For the bugs in bugzilla that are fixed in this release, see:
+
+	https://bugs.freedesktop.org/buglist.cgi?bug_id=4674,4823,5528,5734,6176,6196,6197
+
+This includes the bug causing Pango crashes with some corrupt
+fonts.  For a list of all changes, see ChangeLog.
+
 Release 1.0.2 (2005-10-03 Carl Worth <cworth@cworth.org>)
 =========================================================
 For each bug number XXXX below, see:
