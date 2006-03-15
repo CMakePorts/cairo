@@ -121,6 +121,8 @@ self-copy-ref.png			\
 self-intersecting-ref.png		\
 scale-source-surface-paint-ref.png	\
 set-source-ref.png			\
+show-glyphs-many-ref.png		\
+show-glyphs-many-rgb24-ref.png		\
 show-text-current-point-ref.png		\
 source-clip-ref.png			\
 source-surface-scale-paint-ref.png	\
@@ -129,6 +131,7 @@ text-antialias-gray-ref.png		\
 text-antialias-none-ref.png		\
 text-antialias-subpixel-ref.png		\
 text-pattern-ref.png			\
+text-rotate-ref.png			\
 transforms-ref.png			\
 translate-show-surface-ref.png		\
 trap-clip-ref.png			\
