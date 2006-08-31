@@ -143,6 +143,13 @@ cairo_test_paint_checkered (cairo_t *cr);
 void
 xasprintf (char **strp, const char *fmt, ...) CAIRO_PRINTF_FORMAT(2, 3);
 
+#ifndef FALSE
+#define FALSE 0
+#endif
+#ifndef TRUE
+#define TRUE !FALSE
+#endif
+
 CAIRO_END_DECLS
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004 Red Hat, Inc.
+ * Copyright © 2004,2006 Red Hat, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software
  * and its documentation for any purpose is hereby granted without
@@ -48,8 +48,6 @@
 #include "cairo-test.h"
 
 #include "buffer-diff.h"
-#include "read-png.h"
-#include "write-png.h"
 #include "xmalloc.h"
 
 /* This is copied from cairoint.h. That makes it painful to keep in
