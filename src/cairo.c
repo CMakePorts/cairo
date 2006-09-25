@@ -2835,8 +2835,12 @@ cairo_get_group_target (cairo_t *cr)
  * conditions hold:
  *
  * <orderedlist>
- * <listitem>If there is insufficient memory to copy the path.</listitem>
- * <listitem>If @cr is already in an error state.</listitem>
+ * <listitem>If there is insufficient memory to copy the path. In this
+ *     case <literal>path->status</literal> will be set to
+ *     %CAIRO_STATUS_NO_MEMORY.</listitem>
+ * <listitem>If @cr is already in an error state. In this case
+ *    <literal>path->status</literal> will contain the same status that
+ *    would be returned by cairo_status().</listitem>
  * </orderedlist>
  *
  * In either case, <literal>path->status</literal> will be set to
@@ -2851,7 +2855,7 @@ cairo_path_t *
 cairo_copy_path (cairo_t *cr)
 {
     if (cr->status)
-	return (cairo_path_t*) &_cairo_path_nil;
+	return _cairo_path_data_create_for_status (cr->status);
 
     return _cairo_path_data_create (&cr->path, cr->gstate);
 }
@@ -2893,9 +2897,9 @@ cairo_path_t *
 cairo_copy_path_flat (cairo_t *cr)
 {
     if (cr->status)
-	return (cairo_path_t*) &_cairo_path_nil;
-    else
-	return _cairo_path_data_create_flat (&cr->path, cr->gstate);
+	return _cairo_path_data_create_for_status (cr->status);
+
+    return _cairo_path_data_create_flat (&cr->path, cr->gstate);
 }
 
 /**
