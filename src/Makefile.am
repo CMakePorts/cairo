@@ -263,6 +263,7 @@ install-data-local:
 	  false ;									\
         fi
 
+TESTS_ENVIRONMENT = srcdir="$(srcdir)"
 TESTS = check-def.sh check-plt.sh check-headers.sh
 EXTRA_DIST += $(TESTS)
 
