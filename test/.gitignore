@@ -55,6 +55,7 @@ get-group-target
 glyph-cache-pressure
 gradient-alpha
 imagediff
+infinite-join
 leaky-dash
 leaky-polygon
 line-width
