@@ -1801,13 +1801,17 @@ cairo_test_expecting (cairo_test_t *test,
 		create_win32_surface, cairo_surface_write_to_png, cleanup_win32 },
 #endif
 #if CAIRO_HAS_XCB_SURFACE
-	    { "xcb", CAIRO_SURFACE_TYPE_XCB, CAIRO_CONTENT_COLOR_ALPHA, 0,
+	    /* Acceleration architectures may make the results differ by a
+	     * bit, so we set the error tolerance to 1. */
+	    { "xcb", CAIRO_SURFACE_TYPE_XCB, CAIRO_CONTENT_COLOR_ALPHA, 1,
 		create_xcb_surface, cairo_surface_write_to_png, cleanup_xcb},
 #endif
 #if CAIRO_HAS_XLIB_SURFACE
-	    { "xlib", CAIRO_SURFACE_TYPE_XLIB, CAIRO_CONTENT_COLOR_ALPHA, 0,
+	    /* Acceleration architectures may make the results differ by a
+	     * bit, so we set the error tolerance to 1. */
+	    { "xlib", CAIRO_SURFACE_TYPE_XLIB, CAIRO_CONTENT_COLOR_ALPHA, 1,
 		create_xlib_surface, cairo_surface_write_to_png, cleanup_xlib},
-	    { "xlib", CAIRO_SURFACE_TYPE_XLIB, CAIRO_CONTENT_COLOR, 0,
+	    { "xlib", CAIRO_SURFACE_TYPE_XLIB, CAIRO_CONTENT_COLOR, 1,
 		create_xlib_surface, cairo_surface_write_to_png, cleanup_xlib},
 #endif
 #if CAIRO_HAS_PS_SURFACE
@@ -1847,7 +1851,7 @@ cairo_test_expecting (cairo_test_t *test,
 	     * through librsvg and cairo, but for some mysterious reason, some
 	     * systems get an error of 1 for some pixels on some of the text
 	     * tests. XXX: I'd still like to chase these down at some point.
-	     * For now just set teh svg error tolerance to 1. */
+	     * For now just set the svg error tolerance to 1. */
 	    { "svg", CAIRO_SURFACE_TYPE_SVG, CAIRO_CONTENT_COLOR_ALPHA, 1,
 		    create_svg_surface, svg_surface_write_to_png, cleanup_svg },
 	    { "svg", CAIRO_INTERNAL_SURFACE_TYPE_META, CAIRO_CONTENT_COLOR, 1,
