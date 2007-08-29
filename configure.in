@@ -522,7 +522,11 @@ fi
 
 dnl ===========================================================================
 
-CAIRO_BACKEND_ENABLE(ps, PostScript, ps, PS_SURFACE, auto, [use_ps=yes])
+CAIRO_BACKEND_ENABLE(ps, PostScript, ps, PS_SURFACE, auto, [
+    # The ps backend requires zlib.
+    use_ps=$have_libz
+    ps_NONPKGCONFIG_LIBS=-lz
+])
 
 dnl ===========================================================================
 
