@@ -841,7 +841,7 @@ _get_bitmap_surface (FT_Bitmap		     *bitmap,
 	    width_rgba = width;
 	    stride = bitmap->pitch;
 	    stride_rgba = (width_rgba * 4 + 3) & ~3;
-	    data_rgba = calloc (1, stride_rgba * height);
+	    data_rgba = calloc (stride_rgba, height);
 	    if (data_rgba == NULL) {
 		if (own_buffer)
 		    free (bitmap->buffer);
@@ -1042,7 +1042,7 @@ _render_glyph_outline (FT_Face                    face,
 	bitmap.pitch = stride;
 	bitmap.width = width * hmul;
 	bitmap.rows = height * vmul;
-	bitmap.buffer = calloc (1, stride * bitmap.rows);
+	bitmap.buffer = calloc (stride, bitmap.rows);
 
 	if (bitmap.buffer == NULL) {
 	    _cairo_error (CAIRO_STATUS_NO_MEMORY);
