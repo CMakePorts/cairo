@@ -346,6 +346,7 @@ REFERENCE_IMAGES = \
 	push-group-rgb24-ref.png	\
 	push-group-svg-argb32-ref.png	\
 	radial-gradient-ref.png	\
+	radial-gradient-svg-ref.png	\
 	random-intersections-ps-argb32-ref.png	\
 	random-intersections-ref.png	\
 	rectangle-rounding-error-ref.png	\
@@ -617,4 +618,10 @@ check-ref-dups:
 	@sha1sum *-ref.png > ref.hash
 	@join ref.hash ref.hash | grep -v -E '( .*-ref.png).*\1' | cut -d' ' -f 1-2 | sort -u
 
-.PHONY: check-valgrind test recheck retest html rehtml check-ref-dups
+# Not exactly the best script in the world...
+check-ref-missing:
+	@for i in *-ref.png; do\
+	    echo ${REFERENCE_IMAGES} | grep -sq $$i || echo $$i; \
+	done
+
+.PHONY: check-valgrind test recheck retest html rehtml check-ref-dups check-ref-missing

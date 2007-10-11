@@ -191,6 +191,7 @@ libcairo_la_SOURCES =				\
 	cairo-hull.c				\
 	cairo-image-surface.c			\
 	cairo-lzw.c				\
+	cairo-malloc-private.h			\
 	cairo-matrix.c				\
 	cairo-mutex.c				\
 	cairo-mutex-list-private.h		\
