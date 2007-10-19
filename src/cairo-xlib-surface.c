@@ -1263,10 +1263,8 @@ _recategorize_composite_operation (cairo_xlib_surface_t	      *dst,
 	return DO_XCOPYAREA;
     }
 
-    if (!dst->buggy_repeat)
-	return DO_RENDER;
-
-    if (is_integer_translation &&
+    if (dst->buggy_repeat &&
+	is_integer_translation &&
 	src_attr->extend == CAIRO_EXTEND_REPEAT &&
 	(src->width != 1 || src->height != 1))
     {
@@ -1279,6 +1277,9 @@ _recategorize_composite_operation (cairo_xlib_surface_t	      *dst,
 
 	return DO_UNSUPPORTED;
     }
+
+    if (!CAIRO_SURFACE_RENDER_HAS_COMPOSITE (src))
+	return DO_UNSUPPORTED;
 
     return DO_RENDER;
 }
@@ -1384,13 +1385,13 @@ _cairo_xlib_surface_composite (cairo_operator_t		op,
 	goto BAIL;
     }
 
-    status = _cairo_xlib_surface_set_attributes (src, &src_attr);
-    if (status)
-	goto BAIL;
-
     switch (operation)
     {
     case DO_RENDER:
+	status = _cairo_xlib_surface_set_attributes (src, &src_attr);
+	if (status)
+	    goto BAIL;
+
 	_cairo_xlib_surface_ensure_dst_picture (dst);
 	if (mask) {
 	    status = _cairo_xlib_surface_set_attributes (mask, &mask_attr);
