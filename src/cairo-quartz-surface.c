@@ -425,10 +425,11 @@ _cairo_quartz_cairo_gradient_pattern_to_quartz (cairo_pattern_t *abspat,
 }
 
 /* generic cairo surface -> cairo_quartz_surface_t function */
-static cairo_quartz_surface_t *
-_cairo_quartz_surface_to_quartz (cairo_surface_t *target, cairo_surface_t *pat_surf)
+static cairo_int_status_t
+_cairo_quartz_surface_to_quartz (cairo_surface_t *target,
+				 cairo_surface_t *pat_surf,
+				 cairo_quartz_surface_t **quartz_surf)
 {
-    cairo_quartz_surface_t *quartz_surf = NULL;
 
     if (cairo_surface_get_type(pat_surf) != CAIRO_SURFACE_TYPE_QUARTZ) {
 	/* XXXtodo/perf don't use clone if the source surface is an image surface!  Instead,
@@ -445,7 +446,7 @@ _cairo_quartz_surface_to_quartz (cairo_surface_t *target, cairo_surface_t *pat_s
 
 	status = _cairo_surface_get_extents (pat_surf, &rect);
 	if (status)
-	    return NULL;
+	    return status;
 
 	status = _cairo_surface_clone_similar (ref_type, pat_surf, rect.x, rect.y,
 				      rect.width, rect.height, &new_surf);
@@ -453,18 +454,18 @@ _cairo_quartz_surface_to_quartz (cairo_surface_t *target, cairo_surface_t *pat_s
 	    cairo_surface_destroy(ref_type);
 
         if (status)
-	    return NULL;
+	    return status;
 
-	quartz_surf = (cairo_quartz_surface_t *) new_surf;
+	*quartz_surf = (cairo_quartz_surface_t *) new_surf;
     } else {
 	/* If it's a quartz surface, we can try to see if it's a CGBitmapContext;
 	 * we do this when we call CGBitmapContextCreateImage below.
 	 */
 	cairo_surface_reference (pat_surf);
-	quartz_surf = (cairo_quartz_surface_t*) pat_surf;
+	*quartz_surf = (cairo_quartz_surface_t*) pat_surf;
     }
 
-    return quartz_surf;
+    return CAIRO_STATUS_SUCCESS;
 }
 
 /* Generic cairo_pattern -> CGPattern function */
@@ -473,13 +474,14 @@ SurfacePatternDrawFunc (void *info, CGContextRef context)
 {
     cairo_surface_pattern_t *spat = (cairo_surface_pattern_t *) info;
     cairo_surface_t *pat_surf = spat->surface;
+    cairo_int_status_t status;
 
     cairo_quartz_surface_t *quartz_surf;
     CGImageRef img;
     CGRect imageBounds;
 
-    quartz_surf = _cairo_quartz_surface_to_quartz (NULL, pat_surf);
-    if (!quartz_surf)
+    status = _cairo_quartz_surface_to_quartz (NULL, pat_surf, &quartz_surf);
+    if (status)
 	return;
 
     img = CGBitmapContextCreateImage (quartz_surf->cgContext);
@@ -697,8 +699,8 @@ _cairo_quartz_setup_source (cairo_quartz_surface_t *surface,
 	    cairo_rectangle_int16_t extents;
 	    cairo_status_t status;
 
-	    quartz_surf = _cairo_quartz_surface_to_quartz ((cairo_surface_t *) surface, pat_surf);
-	    if (!quartz_surf)
+	    status = _cairo_quartz_surface_to_quartz ((cairo_surface_t *) surface, pat_surf, &quartz_surf);
+	    if (status)
 		return DO_UNSUPPORTED;
 
 	    img = CGBitmapContextCreateImage (quartz_surf->cgContext);
