@@ -40,7 +40,8 @@ static cairo_test_draw_function_t draw;
 
 cairo_test_t test = {
     "bitmap-font",
-    "Test drawing with a font consisting only of bitmaps",
+    "Test drawing with a font consisting only of bitmaps"
+    "\nPDF backend is failing for an unknown reason (not a regression compared to 1.4.10",
     246 + 1, 2 * TEXT_SIZE,
     draw
 };

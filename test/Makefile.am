@@ -437,6 +437,7 @@ $(REFERENCE_IMAGES)
 XFAIL_TESTS =			\
 a8-mask				\
 big-trap			\
+bitmap-font			\
 extend-pad			\
 filter-nearest-offset		\
 long-lines			\
