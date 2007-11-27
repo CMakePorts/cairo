@@ -1,3 +1,58 @@
+Release 1.4.12 (2007-11-26 Carl Worth <cworth@cworth.org>)
+==========================================================
+This is the sixth update in cairo's stable 1.4 series. It comes five
+months after the 1.4.10 release. This fix includes various bug fixes
+originally developed during the 1.5.x development and backported to
+1.4.
+
+Some of the most significant bug fixes prevent crashes:
+
+  * Avoid overflow when allocating large buffers (Vladimir Vukicevic)
+
+  * Fix crash with cairo_pattern_set_user_data (Carl Worth)
+
+  * Fix broken locking in cairo-ft error path (Chris Wilson)
+
+  * Avoid crash when cleaning up after Render extension (Carl Worth)
+
+  * Avoid crash for zero-sized bitmap glyph (Chris Wilson)
+
+  * Avoid crash with type-1 fonts and ft and atsui enabled (Brian Ewins)
+
+  * Fix many error-handling cases in the Quartz/ATSUI code (Brian Ewins)
+
+  * Eliminate cairo_stroke crash with scaling near zero (Carl Worth)
+
+Other fixes address rendering problems:
+
+  * Fix PDF linear gradients without stops at 0.0 and 1.0 (Adrian Johnson)
+
+  * Fix PDF CFF subsetting to work with Apple Preview (Adrian Johnson)
+
+  * Report proper errors on out-of-memory on win32 (Vladimir Vukicevic)
+
+  * Fix EXTEND_NONE gradients for cairo-quartz (Brian Ewins)
+
+  * Fix odd-number-of-dashes dashing for cairo-quartz (Brian Ewins)
+
+  * Fix erroneous results from cairo_stroke_extents (Carl Worth)
+
+  * Force non-AA text when bitmap strikes are available (Keith Packard)
+
+  * Fix cairo-atsui font metrics (Richard Hult)
+
+And some avoid raising cairo errors for innocent problems:
+
+  * Avoid drawing shutdown for glyph-not-found in font (Behdad Esfahbod)
+
+  * Don't raise an error for creating an empty path (Chris Wilson)
+
+At least one optimization managed to sneak in:
+
+  * Free glyph surfaces after uploading to X server cache (Behdad Esfahbod)
+
+And there are a few very minor fixes, (such as build fixes).
+
 Release 1.4.10 (2007-06-27 Carl Worth <cworth@cworth.org>)
 ==========================================================
 This is the fifth update in cairo's stable 1.4 series. It comes
