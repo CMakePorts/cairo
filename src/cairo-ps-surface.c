@@ -499,7 +499,8 @@ _cairo_ps_surface_emit_truetype_font_subset (cairo_ps_surface_t		*surface,
 static cairo_int_status_t
 _cairo_ps_surface_emit_outline_glyph_data (cairo_ps_surface_t	*surface,
 					   cairo_scaled_font_t	*scaled_font,
-					   unsigned long	 glyph_index)
+					   unsigned long	 glyph_index,
+					   cairo_box_t          *bbox)
 {
     cairo_scaled_glyph_t *scaled_glyph;
     cairo_status_t status;
@@ -512,6 +513,7 @@ _cairo_ps_surface_emit_outline_glyph_data (cairo_ps_surface_t	*surface,
     if (status)
 	return status;
 
+    *bbox = scaled_glyph->bbox;
     _cairo_output_stream_printf (surface->final_stream,
 				 "0 0 %f %f %f %f setcachedevice\n",
 				 _cairo_fixed_to_double (scaled_glyph->bbox.p1.x),
@@ -534,7 +536,8 @@ _cairo_ps_surface_emit_outline_glyph_data (cairo_ps_surface_t	*surface,
 static cairo_int_status_t
 _cairo_ps_surface_emit_bitmap_glyph_data (cairo_ps_surface_t	*surface,
 					  cairo_scaled_font_t	*scaled_font,
-					  unsigned long	 glyph_index)
+					  unsigned long	 glyph_index,
+					  cairo_box_t           *bbox)
 {
     cairo_scaled_glyph_t *scaled_glyph;
     cairo_status_t status;
@@ -551,6 +554,7 @@ _cairo_ps_surface_emit_bitmap_glyph_data (cairo_ps_surface_t	*surface,
     if (status)
 	return status;
 
+    *bbox = scaled_glyph->bbox;
     x_advance = scaled_glyph->metrics.x_advance;
     y_advance = scaled_glyph->metrics.y_advance;
     cairo_matrix_transform_distance (&scaled_font->ctm, &x_advance, &y_advance);
@@ -614,7 +618,8 @@ static cairo_status_t
 _cairo_ps_surface_emit_glyph (cairo_ps_surface_t	*surface,
 			      cairo_scaled_font_t	*scaled_font,
 			      unsigned long		 scaled_font_glyph_index,
-			      unsigned int		 subset_glyph_index)
+			      unsigned int		 subset_glyph_index,
+			      cairo_box_t               *bbox)
 {
     cairo_status_t	    status;
 
@@ -623,11 +628,13 @@ _cairo_ps_surface_emit_glyph (cairo_ps_surface_t	*surface,
 
     status = _cairo_ps_surface_emit_outline_glyph_data (surface,
 							scaled_font,
-							scaled_font_glyph_index);
+							scaled_font_glyph_index,
+							bbox);
     if (status == CAIRO_INT_STATUS_UNSUPPORTED)
 	status = _cairo_ps_surface_emit_bitmap_glyph_data (surface,
 							   scaled_font,
-							   scaled_font_glyph_index);
+							   scaled_font_glyph_index,
+							   bbox);
 
     _cairo_output_stream_printf (surface->final_stream,
 				 "\t\t}\n");
@@ -647,6 +654,7 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
     cairo_status_t status;
     cairo_matrix_t matrix;
     unsigned int i;
+    cairo_box_t font_bbox, bbox;
 
     _cairo_output_stream_printf (surface->final_stream,
 				 "%% _cairo_ps_surface_emit_type3_font_subset\n");
@@ -659,7 +667,6 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
 				 "8 dict begin\n"
 				 "/FontType 3 def\n"
 				 "/FontMatrix [%f %f %f %f 0 0] def\n"
-				 "/FontBBox [0 0 10 10] def\n"
 				 "/Encoding 256 array def\n"
 				 "0 1 255 { Encoding exch /.notdef put } for\n",
 				 matrix.xx,
@@ -678,13 +685,31 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
     for (i = 0; i < font_subset->num_glyphs; i++) {
 	status = _cairo_ps_surface_emit_glyph (surface,
 				               font_subset->scaled_font,
-					       font_subset->glyphs[i], i);
+					       font_subset->glyphs[i], i,
+					       &bbox);
 	if (status)
 	    return status;
+
+        if (i == 0) {
+            font_bbox.p1.x = bbox.p1.x;
+            font_bbox.p1.y = bbox.p1.y;
+            font_bbox.p2.x = bbox.p2.x;
+            font_bbox.p2.y = bbox.p2.y;
+        } else {
+            if (bbox.p1.x < font_bbox.p1.x)
+                font_bbox.p1.x = bbox.p1.x;
+            if (bbox.p1.y < font_bbox.p1.y)
+                font_bbox.p1.y = bbox.p1.y;
+            if (bbox.p2.x > font_bbox.p2.x)
+                font_bbox.p2.x = bbox.p2.x;
+            if (bbox.p2.y > font_bbox.p2.y)
+                font_bbox.p2.y = bbox.p2.y;
+        }
     }
 
     _cairo_output_stream_printf (surface->final_stream,
 				 "] def\n"
+				 "/FontBBox [%f %f %f %f] def\n"
 				 "/BuildChar {\n"
 				 "  exch /Glyphs get\n"
 				 "  exch get exec\n"
@@ -692,6 +717,10 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
 				 "currentdict\n"
 				 "end\n"
 				 "/CairoFont-%d-%d exch definefont pop\n",
+				 _cairo_fixed_to_double (font_bbox.p1.x),
+				 _cairo_fixed_to_double (font_bbox.p1.y),
+				 _cairo_fixed_to_double (font_bbox.p2.x),
+				 _cairo_fixed_to_double (font_bbox.p2.y),
 				 font_subset->font_id,
 				 font_subset->subset_id);
 
