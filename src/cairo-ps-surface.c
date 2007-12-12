@@ -645,25 +645,29 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
     _cairo_output_stream_printf (surface->final_stream,
 				 "%% _cairo_ps_surface_emit_type3_font_subset\n");
 
-    _cairo_output_stream_printf (surface->final_stream,
-				 "/CairoFont-%d-%d <<\n",
-				 font_subset->font_id,
-				 font_subset->subset_id);
-
     matrix = font_subset->scaled_font->scale;
     status = cairo_matrix_invert (&matrix);
     /* _cairo_scaled_font_init ensures the matrix is invertible */
     assert (status == CAIRO_STATUS_SUCCESS);
     _cairo_output_stream_printf (surface->final_stream,
-				 "\t/FontType\t3\n"
-				 "\t/FontMatrix\t[%f %f %f %f 0 0]\n"
-				 "\t/Encoding\t[0]\n"
-				 "\t/FontBBox\t[0 0 10 10]\n"
-				 "\t/Glyphs [\n",
+				 "8 dict begin\n"
+				 "/FontType 3 def\n"
+				 "/FontMatrix [%f %f %f %f 0 0] def\n"
+				 "/FontBBox [0 0 10 10] def\n"
+				 "/Encoding 256 array def\n"
+				 "0 1 255 { Encoding exch /.notdef put } for\n",
 				 matrix.xx,
 				 matrix.yx,
 				 -matrix.xy,
 				 -matrix.yy);
+
+    for (i = 1; i < font_subset->num_glyphs; i++) {
+	_cairo_output_stream_printf (surface->final_stream,
+				     "Encoding %d /g%d put\n", i, i);
+    }
+
+    _cairo_output_stream_printf (surface->final_stream,
+				 "/Glyphs [\n");
 
     for (i = 0; i < font_subset->num_glyphs; i++) {
 	status = _cairo_ps_surface_emit_glyph (surface,
@@ -674,12 +678,16 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
     }
 
     _cairo_output_stream_printf (surface->final_stream,
-				 "\t]\n"
-				 "\t/BuildChar {\n"
-				 "\t\texch /Glyphs get\n"
-				 "\t\texch get exec\n"
-				 "\t}\n"
-				 ">> definefont pop\n");
+				 "] def\n"
+				 "/BuildChar {\n"
+				 "  exch /Glyphs get\n"
+				 "  exch get exec\n"
+				 "} bind def\n"
+				 "currentdict\n"
+				 "end\n"
+				 "/CairoFont-%d-%d exch definefont pop\n",
+				 font_subset->font_id,
+				 font_subset->subset_id);
 
     return CAIRO_STATUS_SUCCESS;
 }
