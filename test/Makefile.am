@@ -61,6 +61,7 @@ long-lines			\
 mask				\
 mask-ctm			\
 mask-surface-ctm		\
+miter-precision			\
 move-to-show-surface		\
 new-sub-path			\
 nil-surface			\
