@@ -1,3 +1,24 @@
+Release 1.4.14 (2008-01-08 Carl Worth <cworth@cworth.org>)
+==========================================================
+This is the seventh update in cairo's stable 1.4 series. It comes
+little more than a month after the 1.4.12 release. Compared to 1.4.12,
+this release adds only a handful of bug fixes all of which were
+cherry-picked from the 1.5 series. One of these fixes a miter-join
+regression introduced during the 1.4.12 series. See below for details.
+
+Fix a regression (which first appeared in 1.4.12) where stroking under
+a large scale would sometimes incorrectly replace a miter join with a
+bevel join. (Thanks to Keith Packard.)
+
+Fix xlib backend to not consider recent X server release as having a
+buggy repeat implementation in the Render extension. (Thanks to
+Bernardo Innocenti.)
+
+Fix several bugs in cairo's PostScript output. These include making
+the PostScript output more compatible with recent versions of
+ghostscript that are more strict about Type 3 fonts, for
+example. (Many thanks to Adrian Johnson.)
+
 Release 1.4.12 (2007-11-26 Carl Worth <cworth@cworth.org>)
 ==========================================================
 This is the sixth update in cairo's stable 1.4 series. It comes five
