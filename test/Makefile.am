@@ -319,6 +319,7 @@ REFERENCE_IMAGES = \
 	mask-surface-ctm-rgb24-ref.png	\
 	mask-surface-ctm-svg-argb32-ref.png	\
 	mask-svg-argb32-ref.png	\
+	miter-precision-ref.png \
 	move-to-show-surface-ref.png	\
 	new-sub-path-ps-argb32-ref.png	\
 	new-sub-path-quartz-ref.png	\
