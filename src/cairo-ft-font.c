@@ -233,7 +233,8 @@ _cairo_ft_unscaled_font_map_destroy (void)
 	    _cairo_hash_table_remove (font_map->hash_table,
 				      &unscaled->base.hash_entry);
 
-	    _font_map_release_face_lock_held (font_map, unscaled);
+	    if (! unscaled->from_face)
+		_font_map_release_face_lock_held (font_map, unscaled);
 	    _cairo_ft_unscaled_font_fini (unscaled);
 	    free (unscaled);
 	}
