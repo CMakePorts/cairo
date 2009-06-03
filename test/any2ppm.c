@@ -196,13 +196,13 @@ write_ppm (cairo_surface_t *surface, int fd)
 
     len = sprintf (buf, "%s %d %d 255\n", format_str, width, height);
     for (j = 0; j < height; j++) {
-	const unsigned char *row = data + stride * j;
+	const unsigned int *row = (unsigned int *) (data + stride * j);
 
 	switch ((int) format) {
 	case CAIRO_FORMAT_ARGB32:
 	    len = _write (fd,
 			  buf, sizeof (buf), len,
-			  row, 4 * width);
+			  (unsigned char *) row, 4 * width);
 	    break;
 	case CAIRO_FORMAT_RGB24:
 	    for (i = 0; i < width; i++) {
@@ -219,7 +219,7 @@ write_ppm (cairo_surface_t *surface, int fd)
 	case CAIRO_FORMAT_A8:
 	    len = _write (fd,
 			  buf, sizeof (buf), len,
-			  row, width);
+			  (unsigned char *) row, width);
 	    break;
 	}
 	if (len < 0)
