@@ -419,7 +419,7 @@ slim_hidden_def(cairo_push_group);
 /**
  * cairo_push_group_with_content:
  * @cr: a cairo context
- * @content: a %#cairo_content_t indicating the type of group that
+ * @content: a #cairo_content_t indicating the type of group that
  *           will be created
  *
  * Temporarily redirects drawing to an intermediate surface known as a
@@ -903,7 +903,7 @@ cairo_set_fill_rule (cairo_t *cr, cairo_fill_rule_t fill_rule)
  * stroking operation, not the user space and CTM in effect at the
  * time of the call to cairo_set_line_width(). The simplest usage
  * makes both of these spaces identical. That is, if there is no
- * change to the CTM between a call to cairo_set_line_with() and the
+ * change to the CTM between a call to cairo_set_line_width() and the
  * stroking operation, then one can just pass user-space values to
  * cairo_set_line_width() and ignore this note.
  *
@@ -1020,7 +1020,7 @@ slim_hidden_def (cairo_set_line_join);
  *
  * If any value in @dashes is negative, or if all values are 0, then
  * @cr will be put into an error state with a status of
- * #%CAIRO_STATUS_INVALID_DASH.
+ * %CAIRO_STATUS_INVALID_DASH.
  **/
 void
 cairo_set_dash (cairo_t	     *cr,
@@ -1807,6 +1807,12 @@ cairo_rectangle (cairo_t *cr,
     cairo_close_path (cr);
 }
 
+/**
+ * cairo_stroke_to_path:
+ * @cr: a cairo context
+ *
+ * This function is not yet implemented.
+ **/
 #if 0
 /* XXX: NYI */
 void
@@ -2292,10 +2298,9 @@ cairo_in_fill (cairo_t *cr, double x, double y)
  *
  * Computes a bounding box in user coordinates covering the area that
  * would be affected, (the "inked" area), by a cairo_stroke()
- * operation operation given the current path and stroke
- * parameters. If the current path is empty, returns an empty
- * rectangle ((0,0), (0,0)). Surface dimensions and clipping are not
- * taken into account.
+ * operation given the current path and stroke parameters.
+ * If the current path is empty, returns an empty rectangle ((0,0), (0,0)).
+ * Surface dimensions and clipping are not taken into account.
  *
  * Note that if the line width is set to exactly zero, then
  * cairo_stroke_extents() will return an empty rectangle. Contrast with
@@ -2433,10 +2438,10 @@ cairo_clip (cairo_t *cr)
  * effectively masking out any changes to the surface that are outside
  * the current clip region.
  *
- * Calling cairo_clip() can only make the clip region smaller, never
+ * Calling cairo_clip_preserve() can only make the clip region smaller, never
  * larger. But the current clip is part of the graphics state, so a
  * temporary restriction of the clip region can be achieved by
- * calling cairo_clip() within a cairo_save()/cairo_restore()
+ * calling cairo_clip_preserve() within a cairo_save()/cairo_restore()
  * pair. The only other means of increasing the size of the clip
  * region is cairo_reset_clip().
  **/
@@ -3439,7 +3444,7 @@ slim_hidden_def (cairo_get_tolerance);
  * cairo_get_antialias:
  * @cr: a cairo context
  *
- * Gets the current shape antialiasing mode, as set by cairo_set_shape_antialias().
+ * Gets the current shape antialiasing mode, as set by cairo_set_antialias().
  *
  * Return value: the current shape antialiasing mode.
  **/
