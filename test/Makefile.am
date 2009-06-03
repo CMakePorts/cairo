@@ -819,6 +819,8 @@ REFERENCE_IMAGES = \
 	smask-ps3-ref.png		\
 	smask-svg12-ref.png		\
 	smask-svg11-ref.png		\
+	smask-xlib-ref.png		\
+	smask-xlib-fallback-ref.png		\
 	smask-fill-ref.png		\
 	smask-fill-pdf-ref.png		\
 	smask-fill-svg12-ref.png	\
@@ -841,6 +843,8 @@ REFERENCE_IMAGES = \
 	smask-text-ps3-ref.png		\
 	smask-text-svg12-ref.png	\
 	smask-text-svg11-ref.png	\
+	smask-text-xlib-ref.png		\
+	smask-text-xlib-fallback-ref.png		\
 	stroke-image-ref.png \
 	stroke-image-pdf-ref.png \
 	stroke-image-ps2-ref.png \
