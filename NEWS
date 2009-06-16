@@ -4,8 +4,7 @@ The cairo community is pleased to announce the 1.8.8 release of the
 cairo graphics library. This is the fourth update to cairo's stable
 1.8 series and contains a small number of bug fixes (in particular a
 few corrections to the documentation and a few fixes in the FreeType font
-backend). This is being released just over six months after
-cairo 1.8.6.
+backend). This is being released just over six months after cairo 1.8.6.
 
 We recommend that everyone using cairo upgrade to 1.8.8.
 
