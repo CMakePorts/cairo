@@ -934,6 +934,14 @@ cairo_surface_set_fallback_resolution (cairo_surface_t	*surface,
 	return;
     }
 
+    if (x_pixels_per_inch <= 0 || y_pixels_per_inch <= 0) {
+	/* XXX Could delay raising the error until we fallback, but throwing
+	 * the error here means that we can catch the real culprit.
+	 */
+	status = _cairo_surface_set_error (surface, CAIRO_STATUS_INVALID_MATRIX);
+	return;
+    }
+
     surface->x_fallback_resolution = x_pixels_per_inch;
     surface->y_fallback_resolution = y_pixels_per_inch;
 }
