@@ -1609,6 +1609,7 @@ _recategorize_composite_operation (cairo_xlib_surface_t	      *dst,
 	is_integer_translation &&
 	src_attr->extend == CAIRO_EXTEND_NONE &&
 	! needs_alpha_composite &&
+        src->owns_pixmap &&
 	_surfaces_compatible (src, dst))
     {
 	return DO_XCOPYAREA;
@@ -1621,6 +1622,7 @@ _recategorize_composite_operation (cairo_xlib_surface_t	      *dst,
     {
 	if (! have_mask &&
 	    ! needs_alpha_composite &&
+            src->owns_pixmap &&
 	    _surfaces_compatible (dst, src))
 	{
 	    return DO_XTILE;
