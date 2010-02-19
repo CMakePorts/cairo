@@ -25,13 +25,14 @@
  * Authors: Carl Worth <cworth@cworth.org>
  */
 
-#include "cairo-perf.h"
-#include "cairo-stats.h"
-
 /* We use _GNU_SOURCE for getline and strndup if available. */
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
+
+#include "cairo-perf.h"
+#include "cairo-stats.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
