@@ -27,10 +27,10 @@
 #cmakedefine CAIRO_HAS_INTERPRETER
 
 /* Define to 1 to enable cairo's pthread feature */
-#cmakedefine CAIRO_HAS_PTHREAD
+#cmakedefine CAIRO_HAS_PTHREAD @CAIRO_HAS_PTHREAD@
 
 /* Define to 1 if we have full pthread support */
-#cmakedefine CAIRO_HAS_REAL_PTHREAD
+#cmakedefine CAIRO_HAS_REAL_PTHREAD @CAIRO_HAS_REAL_PTHREAD@
 
 /* Define to 1 if libspectre is available */
 #cmakedefine CAIRO_HAS_SPECTRE
@@ -44,11 +44,13 @@
 /* Define to 1 to enable cairo's cairo-trace feature */
 #cmakedefine CAIRO_HAS_TRACE
 
-/* Define to 1 to disable certain code paths that rely heavily on double
+/* Define to 1 to disable certain code paths that rely heavily on
+ double
    precision floating-point calculation */
 #cmakedefine DISABLE_SOME_FLOATING_POINT
 
-/* Define to 1 if your system stores words within floats with the most
+/* Define to 1 if your system stores words within floats
+ with the most
    significant word first */
 #cmakedefine FLOAT_WORDS_BIGENDIAN
 
@@ -333,84 +335,3 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #cmakedefine STDC_HEADERS @HAVE_STDLIB_H@
-
-/* Enable extensions on AIX 3, Interix.  */
-#ifndef _ALL_SOURCE
-# undef _ALL_SOURCE
-#endif
-/* Enable GNU extensions on systems that have them.  */
-#ifndef _GNU_SOURCE
-# undef _GNU_SOURCE
-#endif
-/* Enable threading extensions on Solaris.  */
-#ifndef _POSIX_PTHREAD_SEMANTICS
-# undef _POSIX_PTHREAD_SEMANTICS
-#endif
-/* Enable extensions on HP NonStop.  */
-#ifndef _TANDEM_SOURCE
-# undef _TANDEM_SOURCE
-#endif
-/* Enable general extensions on Solaris.  */
-#ifndef __EXTENSIONS__
-# undef __EXTENSIONS__
-#endif
-
-
-/* Define to the value your compiler uses to support the warn-unused-result
-   attribute */
-#cmakedefine WARN_UNUSED_RESULT
-
-/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
-   significant byte first (like Motorola and SPARC, unlike Intel). */
-#if defined AC_APPLE_UNIVERSAL_BUILD
-# if defined __BIG_ENDIAN__
-#  define WORDS_BIGENDIAN 1
-# endif
-#else
-# ifndef WORDS_BIGENDIAN
-#  undef WORDS_BIGENDIAN
-# endif
-#endif
-
-
-/* Deal with multiple architecture compiles on Mac OS X */
-#ifdef __APPLE_CC__
-#ifdef __BIG_ENDIAN__
-#define WORDS_BIGENDIAN 1
-#define FLOAT_WORDS_BIGENDIAN 1
-#else
-#undef WORDS_BIGENDIAN
-#undef FLOAT_WORDS_BIGENDIAN
-#endif
-#endif
-
-
-/* Define to 1 if the X Window System is missing or not being used. */
-#undef X_DISPLAY_MISSING
-
-/* Enable large inode numbers on Mac OS X 10.5.  */
-#ifndef _DARWIN_USE_64_BIT_INODE
-# define _DARWIN_USE_64_BIT_INODE 1
-#endif
-
-/* Number of bits in a file offset, on hosts where this is settable. */
-#undef _FILE_OFFSET_BITS
-
-/* Define for large files, on AIX-style hosts. */
-#undef _LARGE_FILES
-
-/* Define to 1 if on MINIX. */
-#undef _MINIX
-
-/* Define to 2 if the system does not provide POSIX.1 features except with
-   this defined. */
-#undef _POSIX_1_SOURCE
-
-/* Define to 1 if you need to in order for `stat' and other things to work. */
-#undef _POSIX_SOURCE
-
-/* Define to `__inline__' or `__inline' if that's what the C compiler
-   calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifndef __cplusplus
-#undef inline
-#endif
