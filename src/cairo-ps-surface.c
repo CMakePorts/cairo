@@ -337,14 +337,48 @@ _cairo_ps_surface_emit_header (cairo_ps_surface_t *surface)
 				 "/rg { setrgbcolor } bind def\n"
 				 "/d1 { setcachedevice } bind def\n");
 
+    if (!surface->eps) {
+	_cairo_output_stream_printf (surface->final_stream,
+				     "/cairo_set_page_size {\n"
+				     "  %% Change paper size, but only if different from previous paper size otherwise\n"
+				     "  %% duplex fails. PLRM specifies a tolerance of 5 pts when matching paper size\n"
+				     "  %% so we use the same when checking if the size changes.\n"
+				     "  /setpagedevice where {\n"
+				     "    pop currentpagedevice\n"
+				     "    /PageSize known {\n"
+				     "      2 copy\n"
+				     "      currentpagedevice /PageSize get aload pop\n"
+				     "      exch 4 1 roll\n"
+				     "      sub abs 5 gt\n"
+				     "      3 1 roll\n"
+				     "      sub abs 5 gt\n"
+				     "      or\n"
+				     "    } {\n"
+				     "      true\n"
+				     "    } ifelse\n"
+				     "    {\n"
+				     "      2 array astore\n"
+				     "      2 dict begin\n"
+				     "        /PageSize exch def\n"
+				     "        /ImagingBBox null def\n"
+				     "      currentdict end\n"
+				     "      setpagedevice\n"
+				     "    } {\n"
+				     "      pop pop\n"
+				     "    } ifelse\n"
+				     "  } {\n"
+				     "    pop\n"
+				     "  } ifelse\n"
+				     "} def\n");
+    }
+
     _cairo_output_stream_printf (surface->final_stream,
 				 "%%%%EndProlog\n");
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%BeginSetup\n");
 
     num_comments = _cairo_array_num_elements (&surface->dsc_setup_comments);
     if (num_comments) {
-	_cairo_output_stream_printf (surface->final_stream,
-				     "%%%%BeginSetup\n");
-
 	comments = _cairo_array_index (&surface->dsc_setup_comments, 0);
 	for (i = 0; i < num_comments; i++) {
 	    _cairo_output_stream_printf (surface->final_stream,
@@ -352,9 +386,6 @@ _cairo_ps_surface_emit_header (cairo_ps_surface_t *surface)
 	    free (comments[i]);
 	    comments[i] = NULL;
 	}
-
-	_cairo_output_stream_printf (surface->final_stream,
-				     "%%%%EndSetup\n");
     }
 }
 
@@ -382,8 +413,13 @@ _cairo_ps_surface_emit_type1_font_subset (cairo_ps_surface_t		*surface,
 				 "%% _cairo_ps_surface_emit_type1_font_subset\n");
 #endif
 
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%BeginResource: font %s\n",
+				 subset.base_font);
     length = subset.header_length + subset.data_length + subset.trailer_length;
     _cairo_output_stream_write (surface->final_stream, subset.data, length);
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%EndResource\n");
 
     _cairo_type1_subset_fini (&subset);
 
@@ -406,15 +442,18 @@ _cairo_ps_surface_emit_type1_font_fallback (cairo_ps_surface_t		*surface,
     if (unlikely (status))
 	return status;
 
-    /* FIXME: Figure out document structure convention for fonts */
-
 #if DEBUG_PS
     _cairo_output_stream_printf (surface->final_stream,
 				 "%% _cairo_ps_surface_emit_type1_font_fallback\n");
 #endif
 
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%BeginResource: font %s\n",
+				 subset.base_font);
     length = subset.header_length + subset.data_length + subset.trailer_length;
     _cairo_output_stream_write (surface->final_stream, subset.data, length);
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%EndResource\n");
 
     _cairo_type1_fallback_fini (&subset);
 
@@ -442,6 +481,9 @@ _cairo_ps_surface_emit_truetype_font_subset (cairo_ps_surface_t		*surface,
 				 "%% _cairo_ps_surface_emit_truetype_font_subset\n");
 #endif
 
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%BeginResource: font %s\n",
+				 subset.ps_name);
     _cairo_output_stream_printf (surface->final_stream,
 				 "11 dict begin\n"
 				 "/FontType 42 def\n"
@@ -524,8 +566,10 @@ _cairo_ps_surface_emit_truetype_font_subset (cairo_ps_surface_t		*surface,
 				 "/f-%d-%d currentdict end definefont pop\n",
 				 font_subset->font_id,
 				 font_subset->subset_id);
-
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%EndResource\n");
     _cairo_truetype_subset_fini (&subset);
+
 
     return CAIRO_STATUS_SUCCESS;
 }
@@ -621,6 +665,8 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
 #endif
 
     _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%BeginResource: font\n");
+    _cairo_output_stream_printf (surface->final_stream,
 				 "8 dict begin\n"
 				 "/FontType 3 def\n"
 				 "/FontMatrix [1 0 0 1 0 0] def\n"
@@ -700,6 +746,8 @@ _cairo_ps_surface_emit_type3_font_subset (cairo_ps_surface_t		*surface,
 				 - _cairo_fixed_to_double (font_bbox.p1.y),
 				 font_subset->font_id,
 				 font_subset->subset_id);
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%EndResource\n");
 
     return CAIRO_STATUS_SUCCESS;
 }
@@ -1562,6 +1610,9 @@ _cairo_ps_surface_finish (void *abstract_surface)
     status = _cairo_ps_surface_emit_font_subsets (surface);
     if (unlikely (status))
 	goto CLEANUP;
+
+    _cairo_output_stream_printf (surface->final_stream,
+				 "%%%%EndSetup\n");
 
     status = _cairo_ps_surface_emit_body (surface);
     if (unlikely (status))
@@ -2718,11 +2769,9 @@ _cairo_ps_surface_emit_image (cairo_ps_surface_t    *surface,
 	}
 
 	_cairo_output_stream_printf (surface->stream,
-				     "  /Interpolate %s def\n"
 				     "  /ImageMatrix [ 1 0 0 -1 0 %d ] def\n"
 				     "end\n"
 				     "%s\n",
-				     interpolate,
 				     ps_image->height,
 				     stencil_mask ? "imagemask" : "image");
     }
@@ -3403,7 +3452,7 @@ _cairo_ps_surface_emit_surface_pattern (cairo_ps_surface_t      *surface,
 	_cairo_output_stream_printf (surface->stream,
 				     "   /BBox [0 0 %d %d]\n"
 				     "   /PaintProc {\n"
-				     "      CairoPattern\n"
+				     "      pop CairoPattern\n"
 				     "      [-1 0 0  1 %d 0] concat CairoPattern\n"
 				     "      [ 1 0 0 -1 0 %d] concat CairoPattern\n"
 				     "      [-1 0 0  1 %d 0] concat CairoPattern\n"
@@ -3424,7 +3473,7 @@ _cairo_ps_surface_emit_surface_pattern (cairo_ps_surface_t      *surface,
 					 pattern_width, pattern_height);
 	}
 	_cairo_output_stream_printf (surface->stream,
-				     "   /PaintProc { CairoPattern }\n");
+				     "   /PaintProc { pop CairoPattern }\n");
     }
 
     _cairo_output_stream_printf (surface->stream,
@@ -4551,6 +4600,13 @@ _cairo_ps_surface_set_bounding_box (void		*abstract_surface,
 	_cairo_output_stream_printf (surface->stream,
 				     "%%%%PageBoundingBox: %d %d %d %d\n",
 				     x1, y1, x2, y2);
+    }
+
+    if (!surface->eps) {
+	_cairo_output_stream_printf (surface->stream,
+				     "%f %f cairo_set_page_size\n",
+				     ceil(surface->width),
+				     ceil(surface->height));
     }
 
     _cairo_output_stream_printf (surface->stream,

@@ -407,6 +407,7 @@ cairo_type1_font_subset_get_fontname (cairo_type1_font_subset_t *font)
     const char *start, *end, *segment_end;
     char *s;
     int i;
+    cairo_status_t status;
 
     segment_end = font->header_segment + font->header_segment_size;
     start = find_token (font->header_segment, segment_end, "/FontName");
@@ -418,6 +419,9 @@ cairo_type1_font_subset_get_fontname (cairo_type1_font_subset_t *font)
     end = find_token (start, segment_end, "def");
     if (end == NULL)
 	return CAIRO_INT_STATUS_UNSUPPORTED;
+
+    while (end > start && _cairo_isspace(end[-1]))
+	end--;
 
     s = malloc (end - start + 1);
     if (unlikely (s == NULL))
@@ -447,13 +451,9 @@ cairo_type1_font_subset_get_fontname (cairo_type1_font_subset_t *font)
     if (unlikely (font->base.base_font == NULL))
 	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 
-    s = font->base.base_font;
-    while (*s && !is_ps_delimiter(*s))
-	s++;
+    status = _cairo_escape_ps_name (&font->base.base_font);
 
-    *s = 0;
-
-    return CAIRO_STATUS_SUCCESS;
+    return status;
 }
 
 static cairo_status_t
