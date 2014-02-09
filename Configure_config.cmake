@@ -158,8 +158,9 @@ endif()
 #
 
 #INTEL ATOMIC PRIMITIVES 
+if(NOT MSVC)
 set( HAVE_INTEL_ATOMIC_PRIMITIVES 1) 
-
+endif()
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config.h )
