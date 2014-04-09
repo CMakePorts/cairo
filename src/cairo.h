@@ -2211,6 +2211,15 @@ cairo_surface_create_for_rectangle (cairo_surface_t	*target,
                                     double		 width,
                                     double		 height);
 
+/**
+ * cairo_surface_observer_mode_t:
+ * @CAIRO_SURFACE_OBSERVER_NORMAL: no recording is done
+ * @CAIRO_SURFACE_OBSERVER_RECORD_OPERATIONS: operations are recorded
+ *
+ * Whether operations should be recorded.
+ *
+ * Since: 1.12
+ **/
 typedef enum {
 	CAIRO_SURFACE_OBSERVER_NORMAL = 0,
 	CAIRO_SURFACE_OBSERVER_RECORD_OPERATIONS = 0x1
@@ -3039,6 +3048,17 @@ cairo_matrix_transform_point (const cairo_matrix_t *matrix,
  **/
 typedef struct _cairo_region cairo_region_t;
 
+/**
+ * cairo_region_overlap_t:
+ * @CAIRO_REGION_OVERLAP_IN: The contents are entirely inside the region. (Since 1.10)
+ * @CAIRO_REGION_OVERLAP_OUT: The contents are entirely outside the region. (Since 1.10)
+ * @CAIRO_REGION_OVERLAP_PART: The contents are partially inside and
+ *     partially outside the region. (Since 1.10)
+ *
+ * Used as the return value for cairo_region_contains_rectangle().
+ *
+ * Since: 1.10
+ **/
 typedef enum _cairo_region_overlap {
     CAIRO_REGION_OVERLAP_IN,		/* completely inside region */
     CAIRO_REGION_OVERLAP_OUT,		/* completely outside region */

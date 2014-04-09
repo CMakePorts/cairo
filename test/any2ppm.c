@@ -70,7 +70,9 @@
 
 #if CAIRO_CAN_TEST_SVG_SURFACE
 #include <librsvg/rsvg.h>
+#ifndef RSVG_CAIRO_H
 #include <librsvg/rsvg-cairo.h>
+#endif
 #endif
 
 #if CAIRO_HAS_SPECTRE
@@ -861,7 +863,9 @@ main (int argc, char **argv)
     const char *err;
 
 #if CAIRO_CAN_TEST_PDF_SURFACE || CAIRO_CAN_TEST_SVG_SURFACE
+#if GLIB_MAJOR_VERSION <= 2 && GLIB_MINOR_VERSION <= 34
     g_type_init ();
+#endif
 #endif
 
 #if CAIRO_CAN_TEST_SVG_SURFACE

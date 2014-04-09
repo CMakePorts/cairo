@@ -308,6 +308,8 @@ fill_rectangles (void			*_dst,
 	}
     } else {
 	pixman_image_t *src = _pixman_image_for_color (color);
+	if (unlikely (src == NULL))
+	    return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 
 	op = _pixman_operator (op);
 	for (i = 0; i < num_rects; i++) {
@@ -355,6 +357,8 @@ fill_boxes (void		*_dst,
     else
     {
 	pixman_image_t *src = _pixman_image_for_color (color);
+	if (unlikely (src == NULL))
+	    return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 
 	op = _pixman_operator (op);
 	for (chunk = &boxes->chunks; chunk; chunk = chunk->next) {
@@ -507,6 +511,8 @@ composite_boxes (void			*_dst,
 	    op = PIXMAN_OP_LERP_CLEAR;
 #else
 	    free_src = src = _pixman_image_for_color (CAIRO_COLOR_WHITE);
+	    if (unlikely (src == NULL))
+		return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 	    op = PIXMAN_OP_OUT_REVERSE;
 #endif
 	} else if (op == CAIRO_OPERATOR_SOURCE) {
@@ -1251,7 +1257,7 @@ _cairo_image_mask_compositor_get (void)
 	compositor.draw_image_boxes = draw_image_boxes;
 	compositor.fill_rectangles = fill_rectangles;
 	compositor.fill_boxes = fill_boxes;
-	//compositor.check_composite = check_composite;
+	compositor.check_composite = check_composite;
 	compositor.composite = composite;
 	//compositor.lerp = lerp;
 	//compositor.check_composite_boxes = check_composite_boxes;
