@@ -112,13 +112,19 @@ cairo_boilerplate_format_from_content (cairo_content_t content)
     cairo_format_t format;
 
     switch (content) {
-	case CAIRO_CONTENT_COLOR: format = CAIRO_FORMAT_RGB24; break;
-	case CAIRO_CONTENT_COLOR_ALPHA: format = CAIRO_FORMAT_ARGB32; break;
-	case CAIRO_CONTENT_ALPHA: format = CAIRO_FORMAT_A8; break;
-	default:
-	    assert (0); /* not reached */
-	    format = CAIRO_FORMAT_INVALID;
-	    break;
+    case CAIRO_CONTENT_COLOR:
+        format = CAIRO_FORMAT_RGB24;
+        break;
+    case CAIRO_CONTENT_COLOR_ALPHA:
+        format = CAIRO_FORMAT_ARGB32;
+        break;
+    case CAIRO_CONTENT_ALPHA:
+        format = CAIRO_FORMAT_A8;
+        break;
+    default:
+        assert (0); /* not reached */
+        format = CAIRO_FORMAT_INVALID;
+        break;
     }
 
     return format;
@@ -163,10 +169,16 @@ _cairo_boilerplate_image_create_similar (cairo_surface_t *other,
     void *ptr;
 
     switch (content) {
-    case CAIRO_CONTENT_ALPHA: format = CAIRO_FORMAT_A8; break;
-    case CAIRO_CONTENT_COLOR: format = CAIRO_FORMAT_RGB24; break;
+    case CAIRO_CONTENT_ALPHA:
+        format = CAIRO_FORMAT_A8;
+        break;
+    case CAIRO_CONTENT_COLOR:
+        format = CAIRO_FORMAT_RGB24;
+        break;
+    case CAIRO_CONTENT_COLOR_ALPHA:
     default:
-    case CAIRO_CONTENT_COLOR_ALPHA: format = CAIRO_FORMAT_ARGB32; break;
+        format = CAIRO_FORMAT_ARGB32;
+        break;
     }
 
     stride = cairo_format_stride_for_width(format, width);
@@ -206,10 +218,16 @@ _cairo_boilerplate_image16_create_similar (cairo_surface_t *other,
     void *ptr;
 
     switch (content) {
-    case CAIRO_CONTENT_ALPHA: format = CAIRO_FORMAT_A8; break;
-    case CAIRO_CONTENT_COLOR: format = CAIRO_FORMAT_RGB16_565; break;
+    case CAIRO_CONTENT_ALPHA:
+        format = CAIRO_FORMAT_A8;
+        break;
+    case CAIRO_CONTENT_COLOR:
+        format = CAIRO_FORMAT_RGB16_565;
+        break;
+    case CAIRO_CONTENT_COLOR_ALPHA:
     default:
-    case CAIRO_CONTENT_COLOR_ALPHA: format = CAIRO_FORMAT_ARGB32; break;
+        format = CAIRO_FORMAT_ARGB32;
+        break;
     }
 
     stride = cairo_format_stride_for_width(format, width);
@@ -681,10 +699,13 @@ cairo_boilerplate_get_image_target (cairo_content_t content)
 	_cairo_boilerplate_register_all ();
 
     switch (content) {
+    case CAIRO_CONTENT_COLOR:
+        return &builtin_targets[1];
+    case CAIRO_CONTENT_COLOR_ALPHA:
+        return &builtin_targets[0];
+    case CAIRO_CONTENT_ALPHA:
     default:
-    case CAIRO_CONTENT_ALPHA: return NULL;
-    case CAIRO_CONTENT_COLOR: return &builtin_targets[1];
-    case CAIRO_CONTENT_COLOR_ALPHA: return &builtin_targets[0];
+        return NULL;
     }
 }
 
