@@ -1564,11 +1564,11 @@ _cairo_truetype_read_font_name (cairo_scaled_font_t  	 *scaled_font,
 	    goto fail;
     }
 
-    free (name);
-
     status = _cairo_escape_ps_name (&ps_name);
     if (unlikely(status))
 	goto fail;
+
+    free (name);
 
     *ps_name_out = ps_name;
     *font_name_out = family_name;
