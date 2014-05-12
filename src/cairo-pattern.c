@@ -51,8 +51,8 @@
  * @See_Also: #cairo_t, #cairo_surface_t
  *
  * #cairo_pattern_t is the paint with which cairo draws.
- * The primary use of patterns is as the source for all cairo drawing 
- * operations, although they can also be used as masks, that is, as the 
+ * The primary use of patterns is as the source for all cairo drawing
+ * operations, although they can also be used as masks, that is, as the
  * brush too.
  *
  * A cairo pattern is created by using one of the many constructors,
@@ -4032,7 +4032,7 @@ cairo_pattern_get_rgba (cairo_pattern_t *pattern,
  * cairo_pattern_get_surface:
  * @pattern: a #cairo_pattern_t
  * @surface: return value for surface of pattern, or %NULL
- * 
+ *
  * Gets the surface of a surface pattern.  The reference returned in
  * @surface is owned by the pattern; the caller should call
  * cairo_surface_reference() if the surface is to be retained.
@@ -4072,8 +4072,9 @@ cairo_pattern_get_surface (cairo_pattern_t *pattern,
  * @alpha: return value for alpha component of color, or %NULL
  *
  * Gets the color and offset information at the given @index for a
- * gradient pattern.  Values of @index are 0 to 1 less than the number
- * returned by cairo_pattern_get_color_stop_count().
+ * gradient pattern.  Values of @index range from 0 to n-1
+ * where n is the number returned
+ * by cairo_pattern_get_color_stop_count().
  *
  * Return value: %CAIRO_STATUS_SUCCESS, or %CAIRO_STATUS_INVALID_INDEX
  * if @index is not valid for the given pattern.  If the pattern is
@@ -4283,7 +4284,7 @@ slim_hidden_def (cairo_mesh_pattern_get_patch_count);
  * Gets path defining the patch @patch_num for a mesh
  * pattern.
  *
- * @patch_num can range 0 to 1 less than the number returned by
+ * @patch_num can range from 0 to n-1 where n is the number returned by
  * cairo_mesh_pattern_get_patch_count().
  *
  * Return value: the path defining the patch, or a path with status
@@ -4376,7 +4377,7 @@ slim_hidden_def (cairo_mesh_pattern_get_path);
  * Gets the color information in corner @corner_num of patch
  * @patch_num for a mesh pattern.
  *
- * @patch_num can range 0 to 1 less than the number returned by
+ * @patch_num can range from 0 to n-1 where n is the number returned by
  * cairo_mesh_pattern_get_patch_count().
  *
  * Valid values for @corner_num are from 0 to 3 and identify the
@@ -4442,7 +4443,7 @@ slim_hidden_def (cairo_mesh_pattern_get_corner_color_rgba);
  * Gets the control point @point_num of patch @patch_num for a mesh
  * pattern.
  *
- * @patch_num can range 0 to 1 less than the number returned by
+ * @patch_num can range from 0 to n-1 where n is the number returned by
  * cairo_mesh_pattern_get_patch_count().
  *
  * Valid values for @point_num are from 0 to 3 and identify the
