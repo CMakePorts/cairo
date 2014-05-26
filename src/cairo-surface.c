@@ -1293,6 +1293,16 @@ _cairo_mime_data_destroy (void *ptr)
  * discarded if you draw on the surface afterwards. Use this function
  * with care.
  *
+ * Even if a backend supports a MIME type, that does not mean cairo
+ * will always be able to use the attached MIME data. For example, if
+ * the backend does not natively support the compositing operation used
+ * to apply the MIME data to the backend. In that case, the MIME data
+ * will be ignored. Therefore, to apply an image in all cases, it is best
+ * to create an image surface which contains the decoded image data and
+ * then attach the MIME data to that. This ensures the image will always
+ * be used while still allowing the MIME data to be used whenever
+ * possible.
+ *
  * Return value: %CAIRO_STATUS_SUCCESS or %CAIRO_STATUS_NO_MEMORY if a
  * slot could not be allocated for the user data.
  *
