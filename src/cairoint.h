@@ -1321,7 +1321,7 @@ cairo_private cairo_image_surface_t *
 _cairo_surface_map_to_image (cairo_surface_t  *surface,
 			     const cairo_rectangle_int_t *extents);
 
-cairo_private cairo_int_status_t
+cairo_private_no_warn cairo_int_status_t
 _cairo_surface_unmap_image (cairo_surface_t       *surface,
 			    cairo_image_surface_t *image);
 
@@ -1609,18 +1609,18 @@ _cairo_polygon_limit_to_clip (cairo_polygon_t *polygon,
 cairo_private void
 _cairo_polygon_fini (cairo_polygon_t *polygon);
 
-cairo_private cairo_status_t
+cairo_private_no_warn cairo_status_t
 _cairo_polygon_add_line (cairo_polygon_t *polygon,
 			 const cairo_line_t *line,
 			 int top, int bottom,
 			 int dir);
 
-cairo_private cairo_status_t
+cairo_private_no_warn cairo_status_t
 _cairo_polygon_add_external_edge (void *polygon,
 				  const cairo_point_t *p1,
 				  const cairo_point_t *p2);
 
-cairo_private cairo_status_t
+cairo_private_no_warn cairo_status_t
 _cairo_polygon_add_contour (cairo_polygon_t *polygon,
 			    const cairo_contour_t *contour);
 

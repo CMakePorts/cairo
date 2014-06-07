@@ -1,3 +1,116 @@
+Release 1.??.?? (??)
+====================
+intro text...
+
+
+Features
+--------
+
+  Use Pixman's convolution filters for image downscaling, such as for
+  raster images in Inkscape SVG documents.  This improves image quality
+  when viewing large images on low resolution devices, as firefox and
+  chromium already do.
+
+  Improve handling of device transformation and scaling, allowing Cairo
+  to now support scaling at a device level, permitting easier, more
+  transparent HiDPI support.
+
+  Support JBIG2 mime data in PDF.  This allows embedding of more
+  compressed JPEG formats within PDF, rather than including the full
+  uncompressed image.  Also, reduce the number of transparency groups
+  used by PDF to keep the file size small and viewing/printing of the
+  PDF fast.
+
+  Expand the embedding section to include stencil mask support.
+
+  Reorder font declarations to be in natural order.
+
+
+API Changes
+-----------
+  New public functions cairo_surface_set_device_scale and
+  cairo_surface_get_device_scale are available.
+
+
+Dependency Changes
+------------------
+
+  Cairo now requires glib 2.14 for its gobject helper functions,
+  and pixman 0.30 for downscaling.
+
+Bug fixes
+---------
+
+  Don't embed CMYK Jpeg images in svg.
+
+  Fix tests to place output in proper location.
+
+  Fix determination of alpha for all surfaces when recording.
+
+  Extend oversize check to cairo_gl_surface_create_for_texture, so an
+  error surface is returned if the texture is too large to render to.
+
+  Fix embedding of mime data in PDF and PS files.
+
+  Remove useless error handling in *_reply() functions in XCB.
+
+  Fix a double-free exposed by multithreaded apps creating and
+  destroying the same font concurrently.
+  https://bugs.freedesktop.org/show_bug.cgi?id=69470
+
+  Fix corrupt stacks produced by bugs in operand emission for trace.
+
+  Fix out of bounds array access in format cache for xlib
+
+  Don't rename glyphs used by seac operator.  This can cause certain
+  combined characters to use their decorations (e.g. umlauts on ö) to be
+  lost during printing of PDFs using evince.
+  https://bugs.freedesktop.org/show_bug.cgi?id=70364
+
+  Fix crash on calling cairo_create with a finished surface
+
+  Fix SSIZE_T definition problem when making with MSYS on Windows7
+
+  Fix one off issue in gl context cleanup
+
+  Fix usage of CAIRO_STACK_ARRAY_LENGTH
+
+  Fix rectangle stroke with non rectilinear pen
+
+  Fix imagemask with pattern source failure on some printers.  This bug
+  could cause files converted using pdftops to fail for example on Ricoh
+  printers, or opening in Adobe Distiller on Windows.
+  https://bugs.freedesktop.org/show_bug.cgi?id=69485
+
+  Fix whitespace in font names
+
+  Fix page size in generated PDFs.  When printing using pdftocairo on
+  larger page sizes, such as 11x17, the image would be cropped to letter
+  size.
+  https://bugs.freedesktop.org/show_bug.cgi?id=73452
+
+  Fix path-currentpoint test by preserving current-point in
+  copy_path()/append_path() sequence
+
+  Fix generation of HTML in code docs for
+  cairo-format-stride-for-width.  Raw HTML code was being passed
+  to the browser, instead of displaying normally.
+  https://bugs.freedesktop.org/show_bug.cgi?id=63257
+
+  Fix spelling of "tessellator" throughout code.  We're using the
+  American rather than British spelling of this word.
+  https://bugs.freedesktop.org/show_bug.cgi?id=50411
+
+  Fix crash when trying to modify a (const) all-clipped cairo_clip_t
+  https://bugs.freedesktop.org/show_bug.cgi?id=75819
+
+
+  Various cleanups and fixes to warnings, documentation, tests, and
+  build system.  Improve error handling and return value checks.
+  Cleanup XFAIL tests and reference images.  Cover recently added
+  functionality.
+
+
 Release 1.12.16 (2013-08-21 Chris Wilson <chris@chris-wilson.co.uk>)
 ===================================================================
 Thanks to everybody who reported a bug and helped us develop a fix,

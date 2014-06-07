@@ -268,8 +268,6 @@ _cairo_xcb_connection_put_subimage (cairo_xcb_connection_t *connection,
 		if (rows > height)
 		    rows = height;
 
-		length = rows * cpp * width;
-
 		_cairo_xcb_connection_do_put_subimage (connection, dst, gc, src_x, src_y,
 			width, rows, cpp, stride, dst_x, dst_y, depth, _data);
 

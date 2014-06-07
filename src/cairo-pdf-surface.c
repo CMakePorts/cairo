@@ -2642,11 +2642,17 @@ _cairo_pdf_surface_lookup_jbig2_global (cairo_pdf_surface_t       *surface,
     }
 
     global.id = malloc(global_id_length);
+    if (unlikely (global.id == NULL)) {
+	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
+    }
+
     memcpy (global.id, global_id, global_id_length);
     global.id_length = global_id_length;
     global.res = _cairo_pdf_surface_new_object (surface);
-    if (global.res.id == 0)
+    if (global.res.id == 0) {
+	free(global.id);
 	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
+    }
 
     global.emitted = FALSE;
     status = _cairo_array_append (&surface->jbig2_global, &global);

@@ -92,7 +92,9 @@
 #define SOCKET_PATH "./.any2ppm"
 #define TIMEOUT 60000 /* 60 seconds */
 
+#if HAVE_FORK
 #define CAN_RUN_AS_DAEMON 1
+#endif
 #endif
 
 #define ARRAY_LENGTH(A) (sizeof (A) / sizeof (A[0]))

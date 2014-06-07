@@ -105,6 +105,7 @@ preamble (cairo_test_context_t *ctx)
     test_status = read_file (ctx, IMAGE_FILE ".jpg", &data, &len);
     if (test_status) {
 	cairo_test_log (ctx, "Could not read input jpeg file %s\n", IMAGE_FILE ".jpg");
+	free(data);
 	return test_status;
     }
 
@@ -149,6 +150,7 @@ preamble (cairo_test_context_t *ctx)
     test_status = read_file (ctx, IMAGE_FILE ".jpg", &data, &len);
     if (test_status) {
 	cairo_test_log (ctx, "Could not read input jpeg file %s\n", IMAGE_FILE ".jpg");
+	free(data);
 	return test_status;
     }
 

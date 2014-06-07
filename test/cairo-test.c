@@ -83,8 +83,8 @@
 #define TRUE !FALSE
 #endif
 
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof (A[0]))
+#ifndef ARRAY_LENGTH
+#define ARRAY_LENGTH(__array) ((int) (sizeof (__array) / sizeof (__array[0])))
 #endif
 
 #if ! HAVE_ALARM || ! defined(SIGALRM)
@@ -1088,13 +1088,13 @@ REPEAT:
 
 	    if (cairo_test_file_is_older (pass_filename,
 					  filenames,
-					  ARRAY_SIZE (filenames)))
+					  ARRAY_LENGTH (filenames)))
 	    {
 		_xunlink (ctx, pass_filename);
 	    }
 	    if (cairo_test_file_is_older (fail_filename,
 					  filenames,
-					  ARRAY_SIZE (filenames)))
+					  ARRAY_LENGTH (filenames)))
 	    {
 		_xunlink (ctx, fail_filename);
 	    }
@@ -1180,13 +1180,13 @@ REPEAT:
 
 	    if (cairo_test_file_is_older (pass_filename,
 					  filenames,
-					  ARRAY_SIZE (filenames)))
+					  ARRAY_LENGTH (filenames)))
 	    {
 		_xunlink (ctx, pass_filename);
 	    }
 	    if (cairo_test_file_is_older (fail_filename,
 					  filenames,
-					  ARRAY_SIZE (filenames)))
+					  ARRAY_LENGTH (filenames)))
 	    {
 		_xunlink (ctx, fail_filename);
 	    }

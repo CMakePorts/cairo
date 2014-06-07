@@ -127,8 +127,9 @@ static void *_dlhandle = RTLD_NEXT;
     (*name##_real) (args);  \
 })
 
-#define ARRAY_SIZE(a) (sizeof (a) / sizeof (a[0]))
-#define ARRAY_LENGTH(a) ((int) ARRAY_SIZE(a))
+#ifndef ARRAY_LENGTH
+#define ARRAY_LENGTH(__array) ((int) (sizeof (__array) / sizeof (__array[0])))
+#endif
 
 #if SIZEOF_VOID_P == 4
 #define PTR_SHIFT 2
@@ -280,7 +281,7 @@ _type_next_token (Type *t)
 
 	if (b->count < sizeof (b->map) * CHAR_BIT) {
 	    unsigned int n, m, bit;
-	    for (n = 0; n < ARRAY_SIZE (b->map); n++) {
+	    for (n = 0; n < ARRAY_LENGTH (b->map); n++) {
 		if (b->map[n] == (unsigned int) -1)
 		    continue;
 

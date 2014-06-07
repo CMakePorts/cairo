@@ -1851,8 +1851,10 @@ cairo_cff_font_subset_fontdict (cairo_cff_font_t  *font)
     for (i = 0; i < font->scaled_font_subset->num_glyphs; i++) {
 	cid = font->scaled_font_subset->glyphs[i];
 	status = cairo_cff_font_get_gid_for_cid (font, cid, &gid);
-	if (unlikely (status))
+	if (unlikely (status)) {
+	    free (reverse_map);
 	    return status;
+	}
 
         fd = font->fdselect[gid];
         if (reverse_map[fd] < 0) {

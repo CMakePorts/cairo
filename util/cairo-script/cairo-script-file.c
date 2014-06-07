@@ -1063,7 +1063,6 @@ _csi_file_as_string (csi_t *ctx,
     unsigned int allocated;
     csi_status_t status;
 
-    len = 0;
     allocated = 16384;
     bytes = _csi_alloc (ctx, allocated);
     if (bytes == NULL)
