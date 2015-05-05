@@ -9,7 +9,7 @@
 #  Copyright (c) 2008 Joshua L. Blocher <verbalshadow at gmail dot com>
 #  Copyright (c) 2011 Ralf Habacker, <ralf dot habacker at freenet dot de>
 #  Copyright (c) 2012 Dmitry Baryshnikov <polimax at mail dot ru>
-#  Copyright (c) 2013 Michael Pavlyshko <pavlushko at tut dot by>
+#  Copyright (c) 2015 Mikhail Paulyshka <pavlyshko-m at yandex dot by>
 #
 # Distributed under the OSI-approved BSD License
 #
@@ -52,7 +52,10 @@ FIND_PATH(PIXMAN_INCLUDE_DIR
 
 FIND_LIBRARY(PIXMAN_LIBRARY
     NAMES
-        pixman-1
+        pixman-1 
+        pixman-1d
+        pixman-1_static
+        pixman-1_staticd 
     HINTS
         ${_PIXMAN_LIBDIR}
         ${_PIXMAN_ROOT_HINTS_AND_PATHS}
