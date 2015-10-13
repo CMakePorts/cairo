@@ -31,8 +31,10 @@ if(FONTCONFIG_FOUND)
 endif()
 
 if(FREETYPE_FOUND)
+    find_package(BZip2)
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    list(APPEND CAIRO_LIBS ${FREETYPE_LIBRARY})
+    include_directories(${BZIP2_INCLUDE_DIR})
+    list(APPEND CAIRO_LIBS ${FREETYPE_LIBRARIES} ${BZIP2_LIBRARIES})
 endif()
 
 include_directories(src)
